@@ -38,3 +38,25 @@ override var canBecomeFocused: Bool {
 }
 
 ```
+3. didUpdateFocus(in:with:) 메서드는 포커스가 업데이트될 때 호출됩니다. 이 메서드는 UIFocusUpdateContext와 UIFocusAnimationCoordinator 매개변수를 가지고 있습니다. 포커스가 변경될 때마다 호출되며, 현재 포커스가 이 뷰에 있을 때와 없을 때의 동작을 정의합니다.
+ ```swift
+   override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    // 이전 포커스가 이 뷰에 있을 때
+    if context.previouslyFocusedView === self {
+        UIView.animate(withDuration: 0.1, animations: { () -> Void in
+            // 이전 포커스 뷰의 크기를 원래 크기로 조절
+            context.previouslyFocusedView?.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        })
+    }
+    
+    // 다음 포커스가 이 뷰에 있을 때
+    if context.nextFocusedView === self {
+        UIView.animate(withDuration: 0.1, animations: { () -> Void in
+            // 다음 포커스 뷰의 크기를 확대
+            context.nextFocusedView?.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+        })
+    }
+}
+```
+위의 코드는 포커스가 변경될 때 이전 포커스가 FocusView에 있으면 해당 뷰의 크기를 1.0으로, 다음 포커스가 있으면 크기를 1.2로 조절하는 간단한 애니메이션을 수행합니다. 이것은 포커스 이동에 따른 시각적인 효과를 제공하는 데 사용됩니다.
+
